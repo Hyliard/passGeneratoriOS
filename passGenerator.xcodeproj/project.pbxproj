@@ -13,6 +13,7 @@
 		CE589B5B2DDD669900D0C3A2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE589B5A2DDD669900D0C3A2 /* Preview Assets.xcassets */; };
 		CE589B622DDD683D00D0C3A2 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE589B612DDD683D00D0C3A2 /* HomeView.swift */; };
 		CE589B642DDD686C00D0C3A2 /* PasswordGeneratorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE589B632DDD686C00D0C3A2 /* PasswordGeneratorView.swift */; };
+		CE589B662DDE395600D0C3A2 /* .gitignore.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE589B652DDE395600D0C3A2 /* .gitignore.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +24,8 @@
 		CE589B5A2DDD669900D0C3A2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CE589B612DDD683D00D0C3A2 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		CE589B632DDD686C00D0C3A2 /* PasswordGeneratorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordGeneratorView.swift; sourceTree = "<group>"; };
+		CE589B652DDE395600D0C3A2 /* .gitignore.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = .gitignore.xib; sourceTree = "<group>"; };
+		CE589B672DDE39A600D0C3A2 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../../../Downloads/README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +42,8 @@
 		CE589B472DDD669400D0C3A2 = {
 			isa = PBXGroup;
 			children = (
+				CE589B652DDE395600D0C3A2 /* .gitignore.xib */,
+				CE589B672DDE39A600D0C3A2 /* README.md */,
 				CE589B522DDD669400D0C3A2 /* passGenerator */,
 				CE589B512DDD669400D0C3A2 /* Products */,
 			);
@@ -131,6 +136,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE589B662DDE395600D0C3A2 /* .gitignore.xib in Resources */,
 				CE589B5B2DDD669900D0C3A2 /* Preview Assets.xcassets in Resources */,
 				CE589B582DDD669900D0C3A2 /* Assets.xcassets in Resources */,
 			);
