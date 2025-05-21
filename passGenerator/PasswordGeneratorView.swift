@@ -22,7 +22,8 @@ struct PasswordGeneratorView: View {
                 Image("logohyliard")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 120, height: 120)
+                    .frame(width: 160, height: 160)
+                    .padding(50)
                 
                 Text("Generador de Contraseñas")
                     .font(.title2)
