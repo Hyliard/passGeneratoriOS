@@ -31,7 +31,7 @@ Una aplicación iOS desarrollada en SwiftUI que permite generar contraseñas seg
 
 ## 📱 Capturas de pantalla
 
-*(Puedes agregar aquí capturas de tu simulador una vez tengas la vista completa. Por ejemplo:)*
+
 
 | Inicio | Generador |
 |-------|-----------|
