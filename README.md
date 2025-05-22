@@ -31,13 +31,12 @@ Una aplicación iOS desarrollada en SwiftUI que permite generar contraseñas seg
 
 ## 📱 Capturas de pantalla
 
+Aquí puedes ver cómo luce la app:
 
+<img src="screenshots/Simulator Screenshot - iPhone 15 Pro Max - 2025-05-21 at 19.47.58.png" width="300" />
+<img src="screenshots/Simulator Screenshot - iPhone 15 Pro Max - 2025-05-21 at 19.48.02.png" width="300" />
+<img src="screenshots/Simulator Screenshot - iPhone 15 Pro Max - 2025-05-21 at 19.48.08.png" width="300" />
 
-| Inicio | Generador |
-|-------|-----------|
-| ![Inicio](screenshots/home.png) | ![Generador](screenshots/generator.png) |
-
-> Las imágenes deben estar en una carpeta `/screenshots` en tu repo.
 
 ---
 
