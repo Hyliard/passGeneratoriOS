@@ -1,113 +1,197 @@
-//
-//  PasswordGeneratorView.swift
-//  passGenerator
-//
-//  Created by Luis Martinez on 20/05/2025.
-//
-
 import SwiftUI
+import UIKit
 
 struct PasswordGeneratorView: View {
-    @State private var length: Double = 12
-    @State private var includeLowercase = true
-    @State private var includeUppercase = true
-    @State private var includeNumbers = true
-    @State private var includeSymbols = true
+    @State private var length = 12
+    @State private var options = PasswordOptions()
     @State private var password = ""
+    @State private var copyConfirmation = ""
+
+    private let generator = PasswordGenerator()
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 25) {
-                
-                Image("logohyliard")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 160, height: 160)
-                    .padding(50)
-                
-                Text("Generador de Contraseñas")
-                    .font(.title2)
-                    .bold()
-                    .foregroundColor(.white)
+        ZStack {
+            AppColors.background.ignoresSafeArea()
 
-                TextField("Contraseña generada", text: $password)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .disabled(true)
-                    .padding(.horizontal)
+            ScrollView {
+                VStack(spacing: 22) {
+                    Image("logohyliard")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxWidth: 150)
+                        .padding(.top, 12)
+                        .accessibilityLabel("Logo de Hyliard")
 
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        Text("Longitud: \(Int(length))")
-                            .foregroundColor(.white)
-                        Spacer()
-                        Stepper("", value: $length, in: 4...32)
+                    VStack(spacing: 8) {
+                        Text("Generador de Contraseñas")
+                            .font(.title.bold())
+                            .multilineTextAlignment(.center)
+
+                        Text("Configura la longitud y los tipos de caracteres.")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
                     }
-                    
-                    Toggle("Minúsculas", isOn: $includeLowercase)
-                        .toggleStyle(SwitchToggleStyle(tint: .green))
-                        .foregroundColor(.white)
 
-                    Toggle("Mayúsculas", isOn: $includeUppercase)
-                        .toggleStyle(SwitchToggleStyle(tint: .green))
-                        .foregroundColor(.white)
-
-                    Toggle("Números", isOn: $includeNumbers)
-                        .toggleStyle(SwitchToggleStyle(tint: .green))
-                        .foregroundColor(.white)
-
-                    Toggle("Caracteres especiales", isOn: $includeSymbols)
-                        .toggleStyle(SwitchToggleStyle(tint: .green))
-                        .foregroundColor(.white)
+                    passwordPanel
+                    optionsPanel
+                    actionButtons
                 }
                 .padding(.horizontal)
-
-                Button("Generar Contraseña") {
-                    password = generatePassword()
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.green)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-                .padding(.horizontal)
-
-                Button("Copiar Contraseña") {
-                    UIPasteboard.general.string = password
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-                .padding(.horizontal)
-
+                .padding(.bottom, 24)
             }
-            .padding(.vertical)
         }
-        .background(Color(.darkGray))
-        .ignoresSafeArea()
+        .foregroundStyle(AppColors.primaryText)
+        .navigationTitle("Generador")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
-    func generatePassword() -> String {
-        let lowercase = "abcdefghijklmnopqrstuvwxyz"
-        let uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        let numbers = "0123456789"
-        let symbols = "!@#$%^&*()_-+=<>?/|"
+    private var passwordPanel: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Contraseña")
+                    .font(.headline)
 
-        var characters = ""
+                Spacer()
 
-        if includeLowercase { characters += lowercase }
-        if includeUppercase { characters += uppercase }
-        if includeNumbers { characters += numbers }
-        if includeSymbols { characters += symbols }
+                if !password.isEmpty {
+                    Text(PasswordStrength(length: length, options: options).rawValue)
+                        .font(.caption.bold())
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(AppColors.accent.opacity(0.18), in: Capsule())
+                        .foregroundStyle(AppColors.accent)
+                        .accessibilityLabel("Fortaleza \(PasswordStrength(length: length, options: options).rawValue)")
+                }
+            }
 
-        guard !characters.isEmpty else { return "⚠️ Selecciona opciones" }
+            Text(password.isEmpty ? "Aún no generada" : password)
+                .font(.system(.title3, design: .monospaced).weight(.semibold))
+                .textSelection(.enabled)
+                .lineLimit(nil)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(16)
+                .background(AppColors.surface, in: RoundedRectangle(cornerRadius: 8))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(AppColors.border)
+                )
+                .foregroundStyle(password.isEmpty ? .secondary : AppColors.primaryText)
+                .accessibilityLabel(password.isEmpty ? "Contraseña aún no generada" : "Contraseña generada")
+                .accessibilityValue(password.isEmpty ? "" : password)
 
-        return String((0..<Int(length)).compactMap { _ in characters.randomElement() })
+            if !copyConfirmation.isEmpty {
+                Label(copyConfirmation, systemImage: "checkmark.circle.fill")
+                    .font(.footnote)
+                    .foregroundStyle(AppColors.success)
+                    .accessibilityAddTraits(.isStaticText)
+            }
+        }
+        .padding(16)
+        .background(AppColors.elevatedSurface, in: RoundedRectangle(cornerRadius: 8))
     }
+
+    private var optionsPanel: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            Stepper(value: $length, in: PasswordGenerator.allowedLengthRange) {
+                Text("Longitud: \(length)")
+                    .font(.headline)
+            }
+            .accessibilityValue("\(length) caracteres")
+
+            Divider()
+
+            categoryToggle("Minúsculas", systemImage: "textformat", isOn: binding(for: \.includeLowercase))
+            categoryToggle("Mayúsculas", systemImage: "textformat.size", isOn: binding(for: \.includeUppercase))
+            categoryToggle("Números", systemImage: "number", isOn: binding(for: \.includeNumbers))
+            categoryToggle("Símbolos", systemImage: "curlybraces", isOn: binding(for: \.includeSymbols))
+        }
+        .padding(16)
+        .background(AppColors.elevatedSurface, in: RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var actionButtons: some View {
+        VStack(spacing: 12) {
+            Button {
+                generatePassword()
+            } label: {
+                Label("Generar contraseña", systemImage: "arrow.clockwise")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, minHeight: 52)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(AppColors.accent)
+
+            Button {
+                copyPassword()
+            } label: {
+                Label("Copiar contraseña", systemImage: "doc.on.doc")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, minHeight: 52)
+            }
+            .buttonStyle(.bordered)
+            .disabled(password.isEmpty)
+            .accessibilityHint(password.isEmpty ? "Genera una contraseña antes de copiar." : "Copia la contraseña al portapapeles.")
+        }
+    }
+
+    private func categoryToggle(_ title: String, systemImage: String, isOn: Binding<Bool>) -> some View {
+        Toggle(isOn: isOn) {
+            Label(title, systemImage: systemImage)
+                .labelStyle(.titleAndIcon)
+        }
+        .toggleStyle(.switch)
+        .tint(AppColors.accent)
+    }
+
+    private func binding(for keyPath: WritableKeyPath<PasswordOptions, Bool>) -> Binding<Bool> {
+        Binding(
+            get: { options[keyPath: keyPath] },
+            set: { newValue in
+                var updatedOptions = options
+                updatedOptions[keyPath: keyPath] = newValue
+
+                guard updatedOptions.isValid else {
+                    return
+                }
+
+                options = updatedOptions
+                password = ""
+                copyConfirmation = ""
+            }
+        )
+    }
+
+    private func generatePassword() {
+        do {
+            password = try generator.generate(length: length, options: options)
+            copyConfirmation = ""
+        } catch {
+            password = ""
+        }
+    }
+
+    private func copyPassword() {
+        guard !password.isEmpty else {
+            return
+        }
+
+        UIPasteboard.general.string = password
+        copyConfirmation = "Contraseña copiada"
+        UIAccessibility.post(notification: .announcement, argument: copyConfirmation)
+    }
+}
+
+enum AppColors {
+    static let background = Color(.systemGroupedBackground)
+    static let elevatedSurface = Color(.secondarySystemGroupedBackground)
+    static let surface = Color(.tertiarySystemGroupedBackground)
+    static let primaryText = Color.primary
+    static let border = Color.primary.opacity(0.12)
+    static let accent = Color(red: 0.18, green: 0.58, blue: 0.42)
+    static let success = Color(red: 0.16, green: 0.55, blue: 0.32)
 }
 
 #Preview {
     PasswordGeneratorView()
 }
-

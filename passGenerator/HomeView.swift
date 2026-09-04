@@ -1,49 +1,49 @@
-//
-//  HomeView.swift
-//  passGenerator
-//
-//  Created by Luis Martinez on 20/05/2025.
-//
-
 import SwiftUI
 
 struct HomeView: View {
     var body: some View {
-        VStack(spacing: 40) {
-            
-            Spacer()
-            
-            Image(systemName: "lock.shield")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 100, height: 100)
-                .foregroundColor(.white)
-            
-            Text("Generador de Contraseñas Aleatorias")
-                .font(.title2)
-                .bold()
-                .multilineTextAlignment(.center)
-                .foregroundColor(.white)
+        ZStack {
+            AppColors.background.ignoresSafeArea()
+
+            VStack(spacing: 28) {
+                Spacer(minLength: 24)
+
+                Image(systemName: "lock.shield.fill")
+                    .font(.system(size: 88, weight: .semibold))
+                    .foregroundStyle(AppColors.accent)
+                    .accessibilityHidden(true)
+
+                VStack(spacing: 10) {
+                    Text("Hyliard Password Generator")
+                        .font(.largeTitle.bold())
+                        .multilineTextAlignment(.center)
+
+                    Text("Genera contraseñas seguras y personalizadas sin salir del dispositivo.")
+                        .font(.body)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(.secondary)
+                }
                 .padding(.horizontal)
-            
-            NavigationLink(destination: PasswordGeneratorView()) {
-                Text("Ir al Generador")
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                    .padding(.horizontal)
+
+                NavigationLink {
+                    PasswordGeneratorView()
+                } label: {
+                    Label("Ir al generador", systemImage: "key.fill")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, minHeight: 52)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(AppColors.accent)
+                .padding(.horizontal)
+                .accessibilityHint("Abre las opciones para generar una contraseña.")
+
+                Spacer(minLength: 24)
             }
-            
-            Spacer()
         }
-        .background(Color(.darkGray))
-        .ignoresSafeArea()
+        .foregroundStyle(AppColors.primaryText)
     }
 }
 
 #Preview {
     HomeView()
 }
-
